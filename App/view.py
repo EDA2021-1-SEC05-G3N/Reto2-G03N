@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 assert cf
 import time
 import sys
@@ -44,6 +46,7 @@ def printMenu():
     print("2- Req 2 - Video tendencia (país)")
     print("3- Req 3 - Video tendencia (categoría)")
     print("4- Req 4 - Videos con más likes (tag, país y cantidad)")
+    print("5- Req 5 Lab 6 - Videos con más likes (categoría y cantidad)")
 
 def initCatalog():
     """
@@ -115,6 +118,16 @@ def printVideosMasLikes(datos):
         print("Dislikes: ", v['dislikes'])
         print("Tags: ", v['tags'])
 
+def printreq5(respuesta):
+    elements = respuesta['elements']
+    for video in elements:
+        print('\nFecha de tendencia: ' + str(video['trending_date'])+
+        '\n Id del video: ' + video['video_id'] +
+        '\nTitulo: ' + str(video['title']) + '\nTitulo del canal: '+ 
+        video['channel_title'] +  "\nCategoría: "+ 
+        str(video["category_id"]) + "\nvisitas: " + str(video["views"])+ 
+        "\nlikes: " + str(video["likes"])+ "\nDislikes: "+ str(video["dislikes"]))
+
 
 catalog = None
 
@@ -138,8 +151,12 @@ while True:
         print(printInfoPrimerVideo(catalog))
 
         print('\nId y categorías: ')
-        for c in lt.iterator(catalog['category']):
-            print(c['id'],c["name"])
+        for llave in lt.iterator(mp.keySet(catalog['category'])):
+            print(mp.get(catalog['category'], llave))
+            #print("llave: "+str(llave)+" / valor: "+str())
+
+        #for c in (lt.iterator(catalog['category']))
+            #print(c['id'],c["name"])
     
     elif int(inputs[0]) == 1:
 
@@ -171,6 +188,14 @@ while True:
 
         respuesta = controller.requerimiento_4(tag, pais, cantidad, catalog)
         print(printVideosMasLikes(respuesta))
+
+    elif int(inputs[0]) == 5:
+        
+        categoria = input("Ingrese la categoría: ")
+        cantidad = int(input("Ingrese el número de videos: "))
+
+        respuesta = controller.requerimiento_5(categoria, cantidad, catalog)
+        printreq5(respuesta)
 
     else:
         sys.exit(0)

@@ -49,17 +49,21 @@ def newCatalog():
     los videos. Retorna el catalogo inicializado.
     """
     catalog = {'videos': None,
-               'views': None,
                'category': None
                 }
 
-    catalog['videos'] = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
-    catalog['category'] = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
+    catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
+    catalog['category'] = mp.newMap(32, 
+    maptype= 'CHAINING',
+    loadfactor= 1.0,
+    comparefunction= None
+    )
 
     return catalog
 
 
-
+#??? Qué es un indice 
+#??? qué mtype y loadfactor es mejor
 
 # Funciones para agregar informacion al catalogo 
 
@@ -70,11 +74,11 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
 
 
-def addCategory(catalog, category):
+def addCategory(catalog, category_name, category_id):
     """
     Añade una categoria al final, de la lista recibida
     """
-    lt.addLast(catalog['category'], category)
+    mp.put(catalog['category'], category_name, category_id)
 
 
 
@@ -232,7 +236,7 @@ def acortar_lista (sorted_list, cantidad):
     Y va guardando unicamente los datos que tienen diferente title
     """
     lista_final = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
-    
+
     for x in lt.iterator(sorted_list):
         if lt.isEmpty(lista_final):
             lt.addLast(lista_final, x)
@@ -343,6 +347,14 @@ def sortVideosByLikes (lista_filtros):
     
     return sorted_list
 
+#5
+def requerimiento_5 (categoria, catalog):
+
+    pareja = mp.get(catalog['category'], categoria)
+    category_id = me.getValue(pareja)
+
+    return category_id
+
 
 
 
@@ -358,3 +370,8 @@ def sortVideosByLikes (lista_filtros):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+
+
+#DUDAS
+"""-Qué es un índice"""

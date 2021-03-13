@@ -1,4 +1,4 @@
-﻿﻿"""
+﻿"""
  * Copyright 2020, Departamento de sistemas y Computación,
  * Universidad de Los Andes
  *
@@ -86,9 +86,10 @@ def loadCategories (catalog):
 
     input_file = csv.DictReader(open(categoriesfile, encoding='utf-8'), delimiter="\t")
     for category in input_file:
-        categories = {'id': int(category['id']),
-                      'name': category['name']}
-        model.addCategory(catalog, category)
+        category_name =  category['name'].strip()
+        category_id = int(category['id'])
+
+        model.addCategory(catalog, category_name, category_id)
 
 
 
@@ -227,5 +228,15 @@ def requerimiento_4 (tag, pais, cantidad, catalog):
     lista_filtros = filtrar_pais_tag (tag, pais, catalog)
     sorted_list = sortVideosByLikes (lista_filtros)
     lista_acortada = acortar_lista (sorted_list, cantidad)
+
+    return lista_acortada
+
+#5
+def requerimiento_5 (categoria, cantidad, catalog):
+
+    category_id = model.requerimiento_5(categoria, catalog)
+    lista_filtro = model.filtrar_categoria(category_id, catalog)
+    lista_ordenada = model.sortVideosByLikes(lista_filtro)
+    lista_acortada = model.acortar_lista(lista_ordenada, cantidad)
 
     return lista_acortada
