@@ -1,5 +1,8 @@
 # ISIS1225 - Librerias de soporte
 
+ * REQ 2 - Eduardo Jose Herrera Alba - 201912865 - ej.herrera@uniandes.edu.co
+ * REQ 3 - Maria Jose Cely Ortiz - 202011803 - m.cely@uniandes.edu.co
+
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
 - Lib
@@ -15,5 +18,3 @@ Este directorio contiene todo el código de base que se entrega para el funciona
 
 - Test
 Este directorio contiene las pruebas realizadas a los TADs, Estructuras de Datos y Algoritmos.
- * REQ 2-Eduardo Jose Herrera Alba-201912865-ej.herrera@uniandes.edu.co
- * REQ 3-Maria Jose Cely Ortiz-202011803-m.cely@uniandes.edu.co

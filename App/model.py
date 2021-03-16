@@ -54,16 +54,15 @@ def newCatalog():
 
     catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
     catalog['category'] = mp.newMap(32, 
-    maptype= 'CHAINING',
-    loadfactor= 1.0,
+    maptype= 'PROBING',
+    loadfactor= 0.5,
     comparefunction= None
     )
 
     return catalog
 
 
-#??? Qué es un indice 
-#??? qué mtype y loadfactor es mejor
+
 
 # Funciones para agregar informacion al catalogo 
 
@@ -370,8 +369,3 @@ def requerimiento_5 (categoria, catalog):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
-
-
-
-#DUDAS
-"""-Qué es un índice"""
