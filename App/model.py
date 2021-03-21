@@ -49,7 +49,8 @@ def newCatalog():
     los videos. Retorna el catalogo inicializado.
     """
     catalog = {'videos': None,
-               'category': None
+               'category': None,
+               'country': None
                 }
 
     catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
@@ -58,7 +59,13 @@ def newCatalog():
     loadfactor= 0.5,
     comparefunction= None
     )
-
+    """
+    catalog['country'] = mp.newMap(10,
+    maptype= 'PROBING',
+    loadfactor= 0.5,
+    comparefunction= None
+    )
+    """ 
     return catalog
 
 
@@ -80,6 +87,11 @@ def addCategory(catalog, category_name, category_id):
     mp.put(catalog['category'], category_name, category_id)
 
 
+def addCountry(catalog, video):
+    """
+    Añade un video al final, de la lista recibida
+    """
+    mp.put(catalog['country'], video['country'], video)
 
 
 
@@ -90,12 +102,9 @@ def get_id_categoria (categoria, catalog):
     """
     Busca una categoria en especifica del catalog, y retorna su respectivo id
     """
-    id_categoria = None
 
-    for cate in lt.iterator(catalog['category']):
-        if cate['name'].strip() == categoria: 
-            id_categoria = int(cate['id'])
-            break
+    pareja = mp.get(catalog['category'], categoria)
+    id_categoria = me.getValue(pareja)
 
     return id_categoria
 

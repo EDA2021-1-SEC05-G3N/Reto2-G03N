@@ -58,7 +58,7 @@ def loadData(catalog):
     """
     Carga los libros en la estructura de datos
     """
-    controller.loadData(catalog)
+    return controller.loadData(catalog)
 
 
 
@@ -141,7 +141,7 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
 
     if int(inputs[0]) == 0:
-
+        """
         print("Cargando información de los archivos...")
         catalog = initCatalog()
         loadData(catalog)
@@ -153,10 +153,15 @@ while True:
         print('\nId y categorías: ')
         for llave in lt.iterator(mp.keySet(catalog['category'])):
             print(mp.get(catalog['category'], llave))
-            #print("llave: "+str(llave)+" / valor: "+str())
+        """
+        print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        answer = loadData(catalog)
 
-        #for c in (lt.iterator(catalog['category']))
-            #print(c['id'],c["name"])
+        print('Videos cargados: ' + str(lt.size(catalog['videos'])))
+        print('Categorías cargadas: ' + str(mp.size(catalog['category'])))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
     
     elif int(inputs[0]) == 1:
 
