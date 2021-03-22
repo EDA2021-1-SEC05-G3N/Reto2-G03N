@@ -62,7 +62,6 @@ def loadData(catalog):
 
     loadVideos(catalog)
     loadCategories(catalog)
-    #loadCountries(catalog)
 
 
     stop_memory = getMemory()
@@ -99,6 +98,7 @@ def loadVideos(catalog):
                   
         model.addVideo(catalog, cada_video)
 
+
 def loadCategories (catalog):
     """
     Carga las categorías del archivo. Por cada categoría su guarda su id y su nombre.
@@ -113,12 +113,13 @@ def loadCategories (catalog):
 
         model.addCategory(catalog, category_name, category_id)
 
+"""
 def loadCountries(catalog):
 
     videosfile = cf.data_dir + 'videos-large.csv'
     
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
-    
+""" 
 
 
 

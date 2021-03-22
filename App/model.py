@@ -50,22 +50,22 @@ def newCatalog():
     """
     catalog = {'videos': None,
                'category': None,
-               'country': None
+               'countries': None
                 }
 
     catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
     catalog['category'] = mp.newMap(32, 
     maptype= 'PROBING',
-    loadfactor= 0.5,
+    loadfactor= 0.80,    
     comparefunction= None
     )
-    """
-    catalog['country'] = mp.newMap(10,
+    
+    catalog['countries'] = mp.newMap(10,
     maptype= 'PROBING',
     loadfactor= 0.5,
     comparefunction= None
     )
-    """ 
+    
     return catalog
 
 
@@ -78,6 +78,42 @@ def addVideo(catalog, video):
     Añade un video al final, de la lista recibida
     """
     lt.addLast(catalog['videos'], video)
+    addVideoCountry(catalog, video)
+
+def addVideoCountry(catalog, video):
+    """
+    Esta funcion adiciona un libro a la lista de libros que
+    fueron publicados en un año especifico.
+    Los años se guardan en un Map, donde la llave es el año
+    y el valor la lista de libros de ese año.
+    """
+
+    countries_map = catalog['countries']
+ 
+    pubcountry = video['country']
+
+    existcountry = mp.contains(countries_map, pubcountry)
+
+    if existcountry:
+        entry = mp.get(countries_map, pubcountry)
+        country_values = me.getValue(entry)
+    else:
+        country_values = newYear(pubcountry)
+        mp.put(countries_map, pubcountry, country_values)
+    lt.addLast(country_values['videos'], video)
+        
+ 
+
+
+def newYear(pubcountry):
+    """
+    Esta funcion crea la estructura de libros asociados
+    a un año.
+    """
+    entry = {'country': "", "videos": None}
+    entry['country'] = pubcountry
+    entry['videos'] = lt.newList('SINGLE_LINKED')
+    return entry
 
 
 def addCategory(catalog, category_name, category_id):
@@ -85,13 +121,6 @@ def addCategory(catalog, category_name, category_id):
     Añade una categoria al final, de la lista recibida
     """
     mp.put(catalog['category'], category_name, category_id)
-
-
-def addCountry(catalog, video):
-    """
-    Añade un video al final, de la lista recibida
-    """
-    mp.put(catalog['country'], video['country'], video)
 
 
 
@@ -117,8 +146,10 @@ def filtrar_pais_categoria (id_categoria, pais, catalog):
     """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
-    for x in lt.iterator(catalog['videos']):
-        if int(x['category_id']) == id_categoria and str(x['country'].strip()) == pais:
+    lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
+
+    for x in lt.iterator(lista_paises):
+        if int(x['category_id']) == id_categoria:
             lt.addLast(nueva_lista, x)
 
     return nueva_lista
@@ -130,13 +161,8 @@ def filtrar_pais (pais, catalog):
     Y recorre la lista dada, para guardar en la nueva lista 
     solo los videos que correspondan con el respectivo pais
     """
-    lista_pais = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
-    for x in lt.iterator(catalog['videos']):
-        if str(x['country'].strip()) == pais:
-            lt.addLast(lista_pais, x)
-        
-    return lista_pais
+    return (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
 
 #2
 def getTendencia2(sorted_list):
@@ -363,6 +389,12 @@ def requerimiento_5 (categoria, catalog):
 
     return category_id
 
+def VideosPorPais (catalog, pais):
+    
+    x = mp.get(catalog['countries'], pais) 
+    valor = me.getValue(x)
+
+    return valor
 
 
 

@@ -45,11 +45,12 @@ Este código está basado en las implementaciones propuestas en:
 - Data Structures and Algorithms in Java, 6th Edition.  Michael Goodrich
 """
 
+#Capacity es 
 
 def newMap(numelements, prime, loadfactor, comparefunction):
     """Crea una tabla de simbolos (map) sin orden
 
-    Crea una tabla de hash con capacidad igual a nuelements
+    Crea una tabla de hash con capacidad igual a numelements
     (primo mas cercano al doble de numelements).
     prime es un número primo utilizado para  el cálculo de los codigos
     de hash, si no es provisto se  utiliza el primo 109345121.

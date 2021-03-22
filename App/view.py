@@ -23,6 +23,7 @@
 import config as cf
 import sys
 import controller
+import model
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
@@ -201,6 +202,17 @@ while True:
 
         respuesta = controller.requerimiento_5(categoria, cantidad, catalog)
         printreq5(respuesta)
+    
+    elif int(inputs[0]) == 6:
+
+        pais = input('Ingrese el país: ')
+        respuesta = model.VideosPorPais(catalog, pais)
+
+        print(respuesta)
+
+    elif int(inputs[0]) == 7:
+
+        print(catalog['countries'])
 
     else:
         sys.exit(0)
