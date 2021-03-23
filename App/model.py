@@ -34,6 +34,7 @@ assert cf
 import time
 from DISClib.Algorithms.Sorting import mergesort
 
+
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, 
 otra para las categorias de los mismos.
@@ -50,7 +51,8 @@ def newCatalog():
     """
     catalog = {'videos': None,
                'category': None,
-               'countries': None
+               'countries': None,
+               'categories': None
                 }
 
     catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
@@ -86,6 +88,7 @@ def addVideo(catalog, video):
     """
     lt.addLast(catalog['videos'], video)
     addVideoCountry(catalog, video)
+    addVideoCategory(catalog, video)
 
 def addVideoCountry(catalog, video):
     """
@@ -123,6 +126,43 @@ def newYear(pubcountry):
     return entry
 
 
+
+def addVideoCategory(catalog, video):
+    """
+    Esta funcion adiciona un libro a la lista de libros que
+    fueron publicados en un año especifico.
+    Los años se guardan en un Map, donde la llave es el año
+    y el valor la lista de libros de ese año.
+    """
+
+    categories_map = catalog['categories']
+ 
+    pubcategory = video['category_id']
+
+    existcategory = mp.contains(categories_map, pubcategory)
+
+    if existcategory:
+        entry = mp.get(categories_map, pubcategory)
+        category_values = me.getValue(entry)
+    else:
+        category_values = newYear(pubcategory)
+        mp.put(categories_map, pubcategory, category_values)
+    lt.addLast(category_values['videos'], video)
+        
+ 
+
+
+def newYear(pubcategory):
+    """
+    Esta funcion crea la estructura de libros asociados
+    a un año.
+    """
+    entry = {'category': "", "videos": None}
+    entry['category'] = pubcategory
+    entry['videos'] = lt.newList('SINGLE_LINKED')
+    return entry
+
+
 def addCategory(catalog, category_id, category_name):
     """
     Añade una categoria al final, de la lista recibida
@@ -135,17 +175,6 @@ def addCategory(catalog, category_id, category_name):
 
 
 # Funciones de consulta
-
-#1 y 3
-def get_id_categoria (categoria, catalog):
-    """
-    Busca una categoria en especifica del catalog, y retorna su respectivo id
-    """
-
-    pareja = mp.get(catalog['category'], categoria)
-    id_categoria = me.getValue(pareja)
-
-    return id_categoria
 
 #1
 def filtrar_pais_categoria (categoria, pais, catalog):
@@ -171,8 +200,9 @@ def filtrar_pais (pais, catalog):
     Y recorre la lista dada, para guardar en la nueva lista 
     solo los videos que correspondan con el respectivo pais
     """
+    lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
 
-    return (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
+    return lista_paises
 
 #2
 def getTendencia2(sorted_list):
@@ -204,7 +234,7 @@ def getTendencia2(sorted_list):
     return mayor, conteo
 
 #3
-def filtrar_categoria (id_categoria, catalog):
+def filtrar_categoria (categoria, catalog):
     """
     Crea una lista nueva para ordenar los datos segun su id y su trending date.
     Y recorre la lista dada, para guardar en la nueva lista 
@@ -217,7 +247,8 @@ def filtrar_categoria (id_categoria, catalog):
         if x['video_id'] == '#NAME?':
             pass        
         else:
-            if int(x['category_id']) == id_categoria:
+            categoria_x = me.getValue(mp.get(catalog['category'], int(x['category_id'])))
+            if categoria_x == categoria:
                 lt.addLast(nueva_lista, x)
 
     return nueva_lista   
@@ -264,12 +295,13 @@ def filtrar_pais_tag (tag, pais, catalog):
     """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
 
-    for x in lt.iterator(catalog['videos']):
-        if str(x['country'].strip()) == pais:
-            lista_tags = (x['tags'].split("|"))
-            for y in lista_tags:
-                if tag in str(y):
-                    lt.addLast(nueva_lista, x)
+    lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
+
+    for x in lt.iterator(lista_paises):
+        lista_tags = (x['tags'].split("|"))
+        for y in lista_tags:
+            if tag in str(y):
+                lt.addLast(nueva_lista, x)
 
     return nueva_lista
 

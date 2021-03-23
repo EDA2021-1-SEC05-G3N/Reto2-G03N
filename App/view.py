@@ -30,8 +30,7 @@ from DISClib.DataStructures import mapentry as me
 assert cf
 import time
 import sys
-default_limit = 1000000
-sys.setrecursionlimit(default_limit*10) 
+
 
 """
 La vista se encarga de la interacción con el usuario
@@ -164,7 +163,6 @@ while True:
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
 
-        print(catalog['category'])
     elif int(inputs[0]) == 1:
 
         categoria = input('Ingrese la categoría: ')
@@ -173,15 +171,14 @@ while True:
 
         respuesta = controller.requerimiento_1(categoria, pais, cantidad, catalog)
 
-
         print(printVideosMasViews(respuesta))
 
     elif int(inputs[0]) == 2:
 
         pais = input("Ingrese el país: ")
         respuesta = controller.requerimiento_2(pais, catalog)
-        print(respuesta)
-        #print(printTendenciaPais(respuesta))
+        #print(respuesta)
+        print(printTendenciaPais(respuesta))
 
     elif int(inputs[0]) == 3:
 

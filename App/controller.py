@@ -27,6 +27,8 @@ import model
 import csv
 from datetime import datetime
 
+
+
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
@@ -160,13 +162,6 @@ def sortVideosByLikes (lista_filtros):
 # Funciones de consulta sobre el catálogo
 
 #1
-def get_id_categoria (categoria, catalog):
-    """
-    Retorna el id de la categoría solicitada.
-    """
-    return model.get_id_categoria(categoria, catalog)
-
-#1
 def filtrar_pais_categoria (id_categoria, pais, catalog):
     """
     Retorna una lista que cumple con los requerimientos de país y categoría.
@@ -188,11 +183,11 @@ def getTendencia2 (sorted_list):
     return model.getTendencia2(sorted_list)
 
 #3
-def filtrar_categoria (id_categoria, catalog):
+def filtrar_categoria (categoria, catalog):
     """
     Retorna una lista que cumple con el requerimiento de categoría.
     """
-    return model.filtrar_categoria(id_categoria, catalog)
+    return model.filtrar_categoria(categoria, catalog)
 
 #3
 def getTendencia3 (sorted_list):
@@ -225,7 +220,6 @@ def acortar_lista (sorted_list, cantidad):
 #1
 def requerimiento_1(categoria, pais, cantidad, catalog):
 
-    #id_categoria = get_id_categoria(categoria, catalog)
     lista_filtros = filtrar_pais_categoria(categoria, pais, catalog)
     sorted_list = sortVideosByViews(lista_filtros, cantidad)
 
@@ -235,16 +229,14 @@ def requerimiento_1(categoria, pais, cantidad, catalog):
 def requerimiento_2 (pais, catalog):
     
     filtro_pais = filtrar_pais(pais, catalog)
-    #sorted_list = sortVideosByID(filtro_pais)
-    #tendencia = getTendencia2(sorted_list)
+    sorted_list = sortVideosByID(filtro_pais)
+    tendencia = getTendencia2(sorted_list)
 
-    return filtro_pais
-
+    return tendencia
 #3
 def requerimiento_3 (categoria, catalog):
 
-    id_categoria = get_id_categoria(categoria, catalog)
-    filtro_categoria = filtrar_categoria(id_categoria, catalog)
+    filtro_categoria = filtrar_categoria(categoria, catalog)
     sorted_list = sortVideosByID_date(filtro_categoria)
     tendencia_categoria = getTendencia3(sorted_list)
 
