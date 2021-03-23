@@ -108,10 +108,10 @@ def loadCategories (catalog):
 
     input_file = csv.DictReader(open(categoriesfile, encoding='utf-8'), delimiter="\t")
     for category in input_file:
-        category_name =  category['name'].strip()
+        category_name = category['name'].strip()
         category_id = int(category['id'])
 
-        model.addCategory(catalog, category_name, category_id)
+        model.addCategory(catalog, category_id, category_name)
 
 """
 def loadCountries(catalog):
@@ -225,8 +225,8 @@ def acortar_lista (sorted_list, cantidad):
 #1
 def requerimiento_1(categoria, pais, cantidad, catalog):
 
-    id_categoria = get_id_categoria(categoria, catalog)
-    lista_filtros = filtrar_pais_categoria(id_categoria, pais, catalog)
+    #id_categoria = get_id_categoria(categoria, catalog)
+    lista_filtros = filtrar_pais_categoria(categoria, pais, catalog)
     sorted_list = sortVideosByViews(lista_filtros, cantidad)
 
     return sorted_list
@@ -235,10 +235,10 @@ def requerimiento_1(categoria, pais, cantidad, catalog):
 def requerimiento_2 (pais, catalog):
     
     filtro_pais = filtrar_pais(pais, catalog)
-    sorted_list = sortVideosByID(filtro_pais)
-    tendencia = getTendencia2(sorted_list)
+    #sorted_list = sortVideosByID(filtro_pais)
+    #tendencia = getTendencia2(sorted_list)
 
-    return tendencia
+    return filtro_pais
 
 #3
 def requerimiento_3 (categoria, catalog):

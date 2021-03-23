@@ -54,15 +54,22 @@ def newCatalog():
                 }
 
     catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
+    
     catalog['category'] = mp.newMap(32, 
     maptype= 'PROBING',
-    loadfactor= 0.80,    
+    loadfactor= 0.75,    
     comparefunction= None
     )
     
     catalog['countries'] = mp.newMap(10,
     maptype= 'PROBING',
-    loadfactor= 0.5,
+    loadfactor= 0.75,
+    comparefunction= None
+    )
+
+    catalog['categories'] = mp.newMap(32,
+    maptype= 'PROBING',
+    loadfactor= 0.75,
     comparefunction= None
     )
     
@@ -116,11 +123,14 @@ def newYear(pubcountry):
     return entry
 
 
-def addCategory(catalog, category_name, category_id):
+def addCategory(catalog, category_id, category_name):
     """
     Añade una categoria al final, de la lista recibida
     """
-    mp.put(catalog['category'], category_name, category_id)
+    if category_id == None:
+        pass
+    else:
+        mp.put(catalog['category'], category_id, category_name)
 
 
 
@@ -138,7 +148,7 @@ def get_id_categoria (categoria, catalog):
     return id_categoria
 
 #1
-def filtrar_pais_categoria (id_categoria, pais, catalog):
+def filtrar_pais_categoria (categoria, pais, catalog):
     """
     Crea una lista nueva para ordenar los datos segun su id.
     Y recorre la lista dada, para guardar en la nueva lista 
@@ -149,7 +159,7 @@ def filtrar_pais_categoria (id_categoria, pais, catalog):
     lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
 
     for x in lt.iterator(lista_paises):
-        if int(x['category_id']) == id_categoria:
+        if me.getValue(mp.get(catalog['category'], int(x['category_id']))) == categoria:
             lt.addLast(nueva_lista, x)
 
     return nueva_lista

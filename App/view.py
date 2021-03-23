@@ -163,7 +163,8 @@ while True:
         print('Categorías cargadas: ' + str(mp.size(catalog['category'])))
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
-    
+
+        print(catalog['category'])
     elif int(inputs[0]) == 1:
 
         categoria = input('Ingrese la categoría: ')
@@ -172,18 +173,21 @@ while True:
 
         respuesta = controller.requerimiento_1(categoria, pais, cantidad, catalog)
 
+
         print(printVideosMasViews(respuesta))
 
     elif int(inputs[0]) == 2:
 
         pais = input("Ingrese el país: ")
         respuesta = controller.requerimiento_2(pais, catalog)
-        print(printTendenciaPais(respuesta))
+        print(respuesta)
+        #print(printTendenciaPais(respuesta))
 
     elif int(inputs[0]) == 3:
 
         categoria = input('Ingrese la categoría: ')
         respuesta = controller.requerimiento_3(categoria, catalog)
+
         print(printTendenciaCategoria(respuesta))
 
     elif int(inputs[0]) == 4:
