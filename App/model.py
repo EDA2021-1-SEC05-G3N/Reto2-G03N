@@ -200,9 +200,14 @@ def filtrar_pais (pais, catalog):
     Y recorre la lista dada, para guardar en la nueva lista 
     solo los videos que correspondan con el respectivo pais
     """
+    nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
+
     lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
 
-    return lista_paises
+    for x in lt.iterator(lista_paises):
+        lt.addLast(nueva_lista, x)
+
+    return nueva_lista
 
 #2
 def getTendencia2(sorted_list):
