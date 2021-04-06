@@ -46,7 +46,7 @@ def printMenu():
     print("2- Req 2 - Video tendencia (país)")
     print("3- Req 3 - Video tendencia (categoría)")
     print("4- Req 4 - Videos con más likes (tag, país y cantidad)")
-    print("5- Req 5 Lab 6 - Videos con más likes (categoría y cantidad)")
+
 
 def initCatalog():
     """
@@ -203,17 +203,6 @@ while True:
 
         respuesta = controller.requerimiento_5(categoria, cantidad, catalog)
         printreq5(respuesta)
-    
-    elif int(inputs[0]) == 6:
-
-        pais = input('Ingrese el país: ')
-        respuesta = model.VideosPorPais(catalog, pais)
-
-        print(respuesta)
-
-    elif int(inputs[0]) == 7:
-
-        print(catalog['countries'])
 
     else:
         sys.exit(0)
