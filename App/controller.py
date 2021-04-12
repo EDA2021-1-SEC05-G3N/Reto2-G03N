@@ -115,14 +115,6 @@ def loadCategories (catalog):
 
         model.addCategory(catalog, category_id, category_name)
 
-"""
-def loadCountries(catalog):
-
-    videosfile = cf.data_dir + 'videos-large.csv'
-    
-    input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
-""" 
-
 
 
 # Funciones de ordenamiento
@@ -195,7 +187,7 @@ def getTendencia3 (sorted_list):
     Retorna el video con más días en tendencia. En este caso, tiene en cuenta que 
     no se cuente doble como tendencia el mismo día en países distintos. 
     """
-    return model.getTendencia3(sorted_list)
+    return model.masrepetido1(sorted_list)
 
 #4
 def filtrar_pais_tag (tag, pais, catalog):

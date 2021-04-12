@@ -289,6 +289,24 @@ def getTendencia3 (sorted_list):
 
     return mayor, conteo
 
+def masrepetido1(lista_videos):
+    i=0
+    contador=0
+    numerodeapariciones=0
+    video=""
+    while i < lt.size(lista_videos):
+        video1 =lt.getElement(lista_videos,i)
+        video2 =lt.getElement(lista_videos,i+1)
+        if video1["video_id"] == video2["video_id"] :
+           contador+= 1
+        else:
+            if contador > numerodeapariciones:
+               numerodeapariciones = contador
+               video=(lt.getElement(lista_videos,i))
+            contador =0
+        i+=1
+    return (video, numerodeapariciones+1)
+
 #4
 def filtrar_pais_tag (tag, pais, catalog):
     """

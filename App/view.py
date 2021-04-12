@@ -118,16 +118,6 @@ def printVideosMasLikes(datos):
         print("Dislikes: ", v['dislikes'])
         print("Tags: ", v['tags'])
 
-def printreq5(respuesta):
-    elements = respuesta['elements']
-    for video in elements:
-        print('\nFecha de tendencia: ' + str(video['trending_date'])+
-        '\n Id del video: ' + video['video_id'] +
-        '\nTitulo: ' + str(video['title']) + '\nTitulo del canal: '+ 
-        video['channel_title'] +  "\nCategoría: "+ 
-        str(video["category_id"]) + "\nvisitas: " + str(video["views"])+ 
-        "\nlikes: " + str(video["likes"])+ "\nDislikes: "+ str(video["dislikes"]))
-
 
 catalog = None
 
@@ -170,21 +160,20 @@ while True:
         cantidad = int(input('Ingrese el número de videos: '))
 
         respuesta = controller.requerimiento_1(categoria, pais, cantidad, catalog)
-
         print(printVideosMasViews(respuesta))
 
     elif int(inputs[0]) == 2:
 
         pais = input("Ingrese el país: ")
+        
         respuesta = controller.requerimiento_2(pais, catalog)
-        #print(respuesta)
         print(printTendenciaPais(respuesta))
 
     elif int(inputs[0]) == 3:
 
         categoria = input('Ingrese la categoría: ')
-        respuesta = controller.requerimiento_3(categoria, catalog)
 
+        respuesta = controller.requerimiento_3(categoria, catalog)
         print(printTendenciaCategoria(respuesta))
 
     elif int(inputs[0]) == 4:
@@ -195,14 +184,6 @@ while True:
 
         respuesta = controller.requerimiento_4(tag, pais, cantidad, catalog)
         print(printVideosMasLikes(respuesta))
-
-    elif int(inputs[0]) == 5:
-        
-        categoria = input("Ingrese la categoría: ")
-        cantidad = int(input("Ingrese el número de videos: "))
-
-        respuesta = controller.requerimiento_5(categoria, cantidad, catalog)
-        printreq5(respuesta)
 
     else:
         sys.exit(0)
