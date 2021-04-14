@@ -243,15 +243,6 @@ def requerimiento_4 (tag, pais, cantidad, catalog):
 
     return lista_acortada
 
-#5
-def requerimiento_5 (categoria, cantidad, catalog):
-
-    category_id = model.requerimiento_5(categoria, catalog)
-    lista_filtro = model.filtrar_categoria(category_id, catalog)
-    lista_ordenada = model.sortVideosByLikes(lista_filtro)
-    lista_acortada = model.acortar_lista(lista_ordenada, cantidad)
-
-    return lista_acortada
 
 # ======================================
 # Funciones para medir tiempo y memoria
