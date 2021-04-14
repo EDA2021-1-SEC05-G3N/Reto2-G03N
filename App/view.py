@@ -30,7 +30,8 @@ from DISClib.DataStructures import mapentry as me
 assert cf
 import time
 import sys
-
+default_limit = 1000
+sys.setrecursionlimit(default_limit*10) 
 
 """
 La vista se encarga de la interacción con el usuario

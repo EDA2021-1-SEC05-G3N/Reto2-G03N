@@ -63,7 +63,7 @@ def newCatalog():
     comparefunction= None
     )
     
-    catalog['countries'] = mp.newMap(10,
+    catalog['countries'] = mp.newMap(20,
     maptype= 'PROBING',
     loadfactor= 0.75,
     comparefunction= None
@@ -110,10 +110,8 @@ def addVideoCountry(catalog, video):
     else:
         country_values = newYear(pubcountry)
         mp.put(countries_map, pubcountry, country_values)
-    lt.addLast(country_values['videos'], video)
-        
+    lt.addLast(country_values['videos'], video) 
  
-
 
 def newYear(pubcountry):
     """
@@ -126,7 +124,6 @@ def newYear(pubcountry):
     return entry
 
 
-
 def addVideoCategory(catalog, video):
     """
     Esta funcion adiciona un libro a la lista de libros que
@@ -137,7 +134,7 @@ def addVideoCategory(catalog, video):
 
     categories_map = catalog['categories']
  
-    pubcategory = video['category_id']
+    pubcategory = int(video['category_id'])
 
     existcategory = mp.contains(categories_map, pubcategory)
 
@@ -145,14 +142,12 @@ def addVideoCategory(catalog, video):
         entry = mp.get(categories_map, pubcategory)
         category_values = me.getValue(entry)
     else:
-        category_values = newYear(pubcategory)
+        category_values = newYear1(pubcategory)
         mp.put(categories_map, pubcategory, category_values)
     lt.addLast(category_values['videos'], video)
         
  
-
-
-def newYear(pubcategory):
+def newYear1(pubcategory):
     """
     Esta funcion crea la estructura de libros asociados
     a un año.
@@ -170,7 +165,7 @@ def addCategory(catalog, category_id, category_name):
     if category_id == None:
         pass
     else:
-        mp.put(catalog['category'], category_id, category_name)
+        mp.put(catalog['category'], category_name, category_id)
 
 
 
@@ -186,9 +181,10 @@ def filtrar_pais_categoria (categoria, pais, catalog):
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
     lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
+    numero_id = me.getValue(mp.get(catalog['category'], categoria))
 
     for x in lt.iterator(lista_paises):
-        if me.getValue(mp.get(catalog['category'], int(x['category_id']))) == categoria:
+        if int(x['category_id']) == numero_id:
             lt.addLast(nueva_lista, x)
 
     return nueva_lista
@@ -204,10 +200,12 @@ def filtrar_pais (pais, catalog):
 
     lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
 
+    copia = lista_paises.copy()
+
     for x in lt.iterator(lista_paises):
         lt.addLast(nueva_lista, x)
-
-    return nueva_lista
+    
+    return copia
 
 #2
 def getTendencia2(sorted_list):
@@ -238,6 +236,7 @@ def getTendencia2(sorted_list):
 
     return mayor, conteo
 
+
 #3
 def filtrar_categoria (categoria, catalog):
     """
@@ -248,15 +247,15 @@ def filtrar_categoria (categoria, catalog):
     """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByID_date)
 
-    for x in lt.iterator(catalog['videos']):
-        if x['video_id'] == '#NAME?':
-            pass        
-        else:
-            categoria_x = me.getValue(mp.get(catalog['category'], int(x['category_id'])))
-            if categoria_x == categoria:
-                lt.addLast(nueva_lista, x)
+    numero_id = me.getValue(mp.get(catalog['category'], categoria))
+    lista_categorias = (me.getValue(mp.get(catalog['categories'], numero_id)))["videos"]
+
+    for x in lt.iterator(lista_categorias):
+        if x['video_id'] != '#NAME?':
+            lt.addLast(nueva_lista, x)
 
     return nueva_lista   
+
 
 #3
 def getTendencia3 (sorted_list):
@@ -288,6 +287,7 @@ def getTendencia3 (sorted_list):
             conteo_sig = 1
 
     return mayor, conteo
+
 
 def masrepetido1(lista_videos):
     i=0
