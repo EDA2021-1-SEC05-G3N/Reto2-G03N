@@ -23,15 +23,13 @@
 import config as cf
 import sys
 import controller
-import model
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 assert cf
 import time
 import sys
-default_limit = 1000
-sys.setrecursionlimit(default_limit*10) 
+
 
 """
 La vista se encarga de la interacción con el usuario
@@ -65,26 +63,6 @@ def loadData(catalog):
 
 # Funciones para imprimir los datos en la consola
 
-def printBestVideos(videos):
-    size = lt.size(videos)
-    if size:
-        print(' Estos son los mejores videos: ')
-        for video in lt.iterator(videos):
-            print('Titulo: ' + video['title'] + '  views: ' +
-                  video['views'] + ' Likes: ' + video['likes'])
-    else:
-        print('No se encontraron videos')
-
-def printInfoPrimerVideo(catalog):
-    print('\nInfo del primer video:\n',
-        "Título del video: ",(lt.firstElement(catalog['videos']))['title'], 
-        "\nTítulo del canal del video: ",(lt.firstElement(catalog['videos']))['channel_title'], 
-        "\nFecha de tendencia del video: ",str((lt.firstElement(catalog['videos']))['trending_date']),
-        "\nPaís del video: ",(lt.firstElement(catalog['videos']))['country'],
-        "\nViews del video: ",(lt.firstElement(catalog['videos']))['views'],
-        "\nLikes del video: ",(lt.firstElement(catalog['videos']))['likes'],
-        "\nDislikes del video: ",(lt.firstElement(catalog['videos']))['dislikes'])
-
 def printVideosMasViews(datos):
     lista = datos["elements"]
     for v in lista:
@@ -99,17 +77,17 @@ def printVideosMasViews(datos):
 def printTendenciaPais(datos):
     print("\nNombre del video: ", datos[0]['title'])
     print("Nombre del canal: ", datos[0]['channel_title'])
-    print("Pais: ", datos[0]['country'])
+    print("País: ", datos[0]['country'])
     print("Número de días como tendencia: ", datos[1])
 
 def printTendenciaCategoria(datos):
     print("\nNombre del video: ", datos[0]['title'])
     print("Nombre del canal: ", datos[0]['channel_title'])
-    print("Categoria: ", datos[0]['category_id'])
+    print("Categoría: ", datos[0]['category_id'])
     print("Número de días como tendencia: ", datos[1])
 
 def printVideosMasLikes(datos):
-    lista = datos["elements"]
+    lista = datos[0]["elements"]
     for v in lista:
         print("\nNombre del video: ", v['title'])
         print("Nombre del canal: ", v['channel_title'])
@@ -132,19 +110,7 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
 
     if int(inputs[0]) == 0:
-        """
-        print("Cargando información de los archivos...")
-        catalog = initCatalog()
-        loadData(catalog)
 
-        print('Videos cargados: ' + str(lt.size(catalog['videos'])))
-
-        print(printInfoPrimerVideo(catalog))
-
-        print('\nId y categorías: ')
-        for llave in lt.iterator(mp.keySet(catalog['category'])):
-            print(mp.get(catalog['category'], llave))
-        """
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         answer = loadData(catalog)
@@ -154,6 +120,7 @@ while True:
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
 
+
     elif int(inputs[0]) == 1:
 
         categoria = input('Ingrese la categoría: ')
@@ -161,21 +128,33 @@ while True:
         cantidad = int(input('Ingrese el número de videos: '))
 
         respuesta = controller.requerimiento_1(categoria, pais, cantidad, catalog)
-        print(printVideosMasViews(respuesta))
+        printVideosMasViews(respuesta[0])
+
+        print("Tiempo [ms]: ", f"{respuesta[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{respuesta[2]:.3f}")
+
 
     elif int(inputs[0]) == 2:
 
         pais = input("Ingrese el país: ")
         
         respuesta = controller.requerimiento_2(pais, catalog)
-        print(printTendenciaPais(respuesta))
+        printTendenciaPais(respuesta[0])
+
+        print("Tiempo [ms]: ", f"{respuesta[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{respuesta[2]:.3f}")
+    
 
     elif int(inputs[0]) == 3:
 
         categoria = input('Ingrese la categoría: ')
 
         respuesta = controller.requerimiento_3(categoria, catalog)
-        print(printTendenciaCategoria(respuesta))
+        printTendenciaCategoria(respuesta[0])
+    
+        print("Tiempo [ms]: ", f"{respuesta[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{respuesta[2]:.3f}")
+
 
     elif int(inputs[0]) == 4:
 
@@ -184,7 +163,10 @@ while True:
         cantidad = int(input('Ingrese el número de videos: '))
 
         respuesta = controller.requerimiento_4(tag, pais, cantidad, catalog)
-        print(printVideosMasLikes(respuesta))
+        printVideosMasLikes(respuesta)
+
+        print("Tiempo [ms]: ", f"{respuesta[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{respuesta[2]:.3f}")
 
     else:
         sys.exit(0)

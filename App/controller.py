@@ -45,7 +45,6 @@ def initCatalog():
 
 
 
-
 # Funciones para la carga de datos
 
 def loadData(catalog):
@@ -206,42 +205,106 @@ def acortar_lista (sorted_list, cantidad):
 
 
 
-
 #Funciones con el orden de las ejecuciones de cada requerimiento:
 
 #1
 def requerimiento_1(categoria, pais, cantidad, catalog):
 
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+
     lista_filtros = filtrar_pais_categoria(categoria, pais, catalog)
     sorted_list = sortVideosByViews(lista_filtros, cantidad)
 
-    return sorted_list
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+
+    return sorted_list, delta_time, delta_memory
 
 #2
 def requerimiento_2 (pais, catalog):
     
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+
     filtro_pais = filtrar_pais(pais, catalog)
     sorted_list = sortVideosByID(filtro_pais)
     tendencia = getTendencia2(sorted_list)
 
-    return tendencia
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return tendencia, delta_time, delta_memory
+
 #3
 def requerimiento_3 (categoria, catalog):
+
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
 
     filtro_categoria = filtrar_categoria(categoria, catalog)
     sorted_list = sortVideosByID_date(filtro_categoria)
     tendencia_categoria = getTendencia3(sorted_list)
 
-    return tendencia_categoria
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return tendencia_categoria, delta_time, delta_memory
 
 #4
 def requerimiento_4 (tag, pais, cantidad, catalog):
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
 
     lista_filtros = filtrar_pais_tag (tag, pais, catalog)
     sorted_list = sortVideosByLikes (lista_filtros)
     lista_acortada = acortar_lista (sorted_list, cantidad)
 
-    return lista_acortada
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return lista_acortada, delta_time, delta_memory
 
 
 # ======================================

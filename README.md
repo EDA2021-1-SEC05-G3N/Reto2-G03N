@@ -1,7 +1,7 @@
 # ISIS1225 - Librerias de soporte
 
- * REQ 2 - Eduardo Jose Herrera Alba - 201912865 - ej.herrera@uniandes.edu.co
- * REQ 3 - Maria Jose Cely Ortiz - 202011803 - m.cely@uniandes.edu.co
+ * REQ 2 - Eduardo José Herrera Alba - 201912865 - ej.herrera@uniandes.edu.co
+ * REQ 3 - Maria José Cely Ortiz - 202011803 - m.cely@uniandes.edu.co
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 

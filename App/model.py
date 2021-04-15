@@ -55,7 +55,7 @@ def newCatalog():
                'categories': None
                 }
 
-    catalog['videos'] = lt.newList('SINGLE_LINKED', cmpfunction = comparevideo_id1)
+    catalog['videos'] = lt.newList('ARRAY_LIST', cmpfunction = comparevideo_id1)
     
     catalog['category'] = mp.newMap(32, 
     maptype= 'PROBING',
@@ -84,7 +84,7 @@ def newCatalog():
 
 def addVideo(catalog, video):
     """
-    Añade un video al final, de la lista recibida
+    Añade un video al final, de la lista recibida. 
     """
     lt.addLast(catalog['videos'], video)
     addVideoCountry(catalog, video)
@@ -92,10 +92,9 @@ def addVideo(catalog, video):
 
 def addVideoCountry(catalog, video):
     """
-    Esta funcion adiciona un libro a la lista de libros que
-    fueron publicados en un año especifico.
-    Los años se guardan en un Map, donde la llave es el año
-    y el valor la lista de libros de ese año.
+    Esta funcion adiciona un video a la lista de videos.
+    Los países se guardan en un Map, donde la llave es el país
+    y el valor la lista de videos de ese país.
     """
 
     countries_map = catalog['countries']
@@ -108,19 +107,19 @@ def addVideoCountry(catalog, video):
         entry = mp.get(countries_map, pubcountry)
         country_values = me.getValue(entry)
     else:
-        country_values = newYear(pubcountry)
+        country_values = newCountry(pubcountry)
         mp.put(countries_map, pubcountry, country_values)
     lt.addLast(country_values['videos'], video) 
  
 
-def newYear(pubcountry):
+def newCountry(pubcountry):
     """
-    Esta funcion crea la estructura de libros asociados
+    Esta funcion crea la estructura de videos asociados
     a un año.
     """
     entry = {'country': "", "videos": None}
     entry['country'] = pubcountry
-    entry['videos'] = lt.newList('SINGLE_LINKED')
+    entry['videos'] = lt.newList('ARRAY_LIST')
     return entry
 
 
@@ -142,25 +141,26 @@ def addVideoCategory(catalog, video):
         entry = mp.get(categories_map, pubcategory)
         category_values = me.getValue(entry)
     else:
-        category_values = newYear1(pubcategory)
+        category_values = newCategory(pubcategory)
         mp.put(categories_map, pubcategory, category_values)
     lt.addLast(category_values['videos'], video)
         
  
-def newYear1(pubcategory):
+def newCategory(pubcategory):
     """
     Esta funcion crea la estructura de libros asociados
     a un año.
     """
     entry = {'category': "", "videos": None}
     entry['category'] = pubcategory
-    entry['videos'] = lt.newList('SINGLE_LINKED')
+    entry['videos'] = lt.newList('ARRAY_LIST')
     return entry
 
 
 def addCategory(catalog, category_id, category_name):
     """
-    Añade una categoria al final, de la lista recibida
+    Añade una categoría al mapa con el nombre de las 
+    categorías como llave y el cotegory_id como valor. 
     """
     if category_id == None:
         pass
@@ -196,46 +196,32 @@ def filtrar_pais (pais, catalog):
     Y recorre la lista dada, para guardar en la nueva lista 
     solo los videos que correspondan con el respectivo pais
     """
-    nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
     lista_paises = (me.getValue(mp.get(catalog['countries'], pais)))["videos"]
-
-    copia = lista_paises.copy()
-
-    for x in lt.iterator(lista_paises):
-        lt.addLast(nueva_lista, x)
     
-    return copia
+    return lista_paises
 
 #2
 def getTendencia2(sorted_list):
 
-    mayor = lt.firstElement(sorted_list)
+    actual = lt.firstElement(sorted_list)
     conteo = 0
 
-    sig = None
-    conteo_sig = 0
+    mayor = actual
+    conteo_mayor = 0
 
     for x in lt.iterator(sorted_list):
-        if x['video_id'] == mayor["video_id"]:
+        if x['video_id'] == actual["video_id"]:
             conteo += 1
- 
-        elif sig == None: 
-            sig = x
-            conteo_sig += 1
-
-        elif x['video_id'] == sig["video_id"]:
-                conteo_sig += 1
-                
+        
         else:
-            if conteo_sig > conteo:
-                mayor = sig
-                conteo = conteo_sig
-            sig = x
-            conteo_sig = 1
+            if conteo > conteo_mayor:
+                mayor = actual
+                conteo_mayor = conteo
+            actual = x
+            conteo = 1
 
-    return mayor, conteo
-
+    return mayor, conteo_mayor
 
 #3
 def filtrar_categoria (categoria, catalog):
@@ -256,39 +242,7 @@ def filtrar_categoria (categoria, catalog):
 
     return nueva_lista   
 
-
 #3
-def getTendencia3 (sorted_list):
-
-    mayor = lt.firstElement(sorted_list)
-    conteo = 1
-
-    sig = None
-    conteo_sig = 1
-
-    for x in lt.iterator(sorted_list):
-        if x['video_id'] == mayor["video_id"]:
-            if x['trending_date'] != mayor["trending_date"]:
-                conteo += 1
- 
-        elif sig == None: 
-            sig = x
-            conteo_sig += 1
-
-        elif x['video_id'] == sig["video_id"]:
-            if x['trending_date'] != sig["trending_date"]:
-                conteo_sig += 1
-                
-        else:
-            if conteo_sig > conteo:
-                mayor = sig
-                conteo = conteo_sig
-            sig = x
-            conteo_sig = 1
-
-    return mayor, conteo
-
-
 def masrepetido1(lista_videos):
     i=0
     contador=0
@@ -311,10 +265,9 @@ def masrepetido1(lista_videos):
 def filtrar_pais_tag (tag, pais, catalog):
     """
     Crea una lista nueva para ordenar los datos segun sus likes.
-    Y recorre la lista dada, para guardar en la nueva lista 
-    solo los videos que correspondan con el pais dado,
-    y que tengan en sus id's el id dado.
-    Antes de leer los tag, se dividen por "|" para poderlos leer bien
+    Obtiene la lista con los países que se encuentra en el map countries. 
+    Recorre esta lista para obtener los videos con el tag que se busca.
+    Antes de leer los tag, se dividen por "|" para poderlos leer bien.
     """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
 
@@ -328,34 +281,29 @@ def filtrar_pais_tag (tag, pais, catalog):
 
     return nueva_lista
 
-#4
 def acortar_lista (sorted_list, cantidad):
     """
-    Crea una lista nueva para ordenar los datos segun sus likes.
-    Y va guardando unicamente los datos que tienen diferente title
+    Crea una lista nueva para ordenar los datos según sus likes.
+    Y va guardando únicamente los datos que tienen diferente title
     """
     lista_final = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
 
+    lt.addLast(lista_final, (lt.firstElement(sorted_list)))
+    titulo = lt.firstElement(sorted_list)['title']
+    lista_titulos = [titulo]
+    conteo = 1
+
     for x in lt.iterator(sorted_list):
-        if lt.isEmpty(lista_final):
-            lt.addLast(lista_final, x)
-        else:
-            cond = True
-            for y in lt.iterator(lista_final):
-                if y['title'] == x['title']:
-                    cond = False
-            if cond == True:
-                lt.addLast(lista_final, x)
-                if lt.size(lista_final) == cantidad: 
-                    break
-        if lt.size(lista_final) == cantidad:
+
+        if conteo == cantidad:
             break
 
+        if x['title'] not in lista_titulos:
+            lt.addLast(lista_final, x)
+            lista_titulos.append(x['title'])
+            conteo += 1
+
     return lista_final
-
-
-
-
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -372,6 +320,8 @@ def comparevideo_id1(video1, video2):
 def cmpVideosByID_date (video1, video2):
     """
     Devuelve verdadero (True) si los 'id' de video1 son menores que los del video2
+    Si los 'id' son iguales, devuelve verdadero si el trending date del video1 es
+    menor que el del video2 
     Args:
     video1: informacion del primer video que incluye su valor 'video_id'
     video2: informacion del segundo video que incluye su valor 'video_id'
@@ -401,15 +351,12 @@ def cmpVideosByLikes(video1, video2):
     return (float(video1['likes']) > float(video2['likes']))
 
 
-
-
-
 # Funciones de ordenamiento
 
 #1
 def sortVideosByViews (lista_filtros, cantidad):
     """
-    Ordena la lista recibida organizando los datos segun sus Views
+    Ordena la lista recibida organizando los datos según sus Views
     Y crea una lista nueva para guardar los datos allí, para retornar su copia
     """
     sorted_list = mergesort.sort(lista_filtros, cmpVideosByViews)
@@ -422,7 +369,7 @@ def sortVideosByViews (lista_filtros, cantidad):
 #2
 def sortVideosByID (filtro_pais):
     """
-    Ordena la lista recibida organizando los datos segun sus id
+    Ordena la lista recibida organizando los datos según sus id
     """
     sorted_list = mergesort.sort(filtro_pais, comparevideo_id1)
 
@@ -431,7 +378,8 @@ def sortVideosByID (filtro_pais):
 #3
 def sortVideosByID_date (filtro_categoria):
     """
-    Ordena la lista recibida organizando los datos segun sus id o sus trending date
+    Ordena la lista recibida organizando los datos según sus id, como
+    segundo parámetro de ordenamiento usa los trending date.
     """
     sorted_list = mergesort.sort(filtro_categoria, cmpVideosByID_date)
 
@@ -440,38 +388,8 @@ def sortVideosByID_date (filtro_categoria):
 #4
 def sortVideosByLikes (lista_filtros):
     """
-    Ordena la lista recibida organizando los datos segun sus Likes
+    Ordena la lista recibida organizando los datos según sus Likes.
     """
     sorted_list = mergesort.sort(lista_filtros, cmpVideosByLikes)
     
     return sorted_list
-
-#5
-def requerimiento_5 (categoria, catalog):
-
-    pareja = mp.get(catalog['category'], categoria)
-    category_id = me.getValue(pareja)
-
-    return category_id
-
-def VideosPorPais (catalog, pais):
-    
-    x = mp.get(catalog['countries'], pais) 
-    valor = me.getValue(x)
-
-    return valor
-
-
-
-
-# Construccion de modelos
-
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-# Funciones de ordenamiento
